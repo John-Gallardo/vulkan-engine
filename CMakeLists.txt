@@ -6,6 +6,14 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
+# packages & programs
+find_package(glfw3 3.3 REQUIRED)
+find_package(volk CONFIG REQUIRED)
+find_program(IWYU_PATH NAMES include-what-you-use iwyu)
+if (NOT IWYU_PATH)
+    message(FATAL_ERROR "Could not find include-what-you-use")
+endif()
+
 set(SOURCE 
     src/main.cpp
     src/App/App.cpp 
@@ -26,10 +34,11 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     GLFW_INCLUDE_VULKAN
 )
 
-# find & link libraries
-find_package(glfw3 3.3 REQUIRED)
-find_package(Vulkan REQUIRED)
+# link libraries
 target_link_libraries(${PROJECT_NAME}
     glfw
-    Vulkan::Vulkan
+    volk
 )
+
+# use programs
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_INCLUDE_WHAT_YOU_USE ${IWYU_PATH})
