@@ -33,6 +33,12 @@ void Window::pollEvents() {
     glfwPollEvents();
 }
 
+InstanceExtensionInfo Window::getRequiredInstanceExtensions() const {
+    uint32_t glfwExtensionCount{};
+    const char **glfwExtensions{glfwGetRequiredInstanceExtensions(&glfwExtensionCount)};
+    return {glfwExtensionCount, glfwExtensions};
+}
+
 void Window::cleanup() {
     glfwDestroyWindow(m_window);
     glfwTerminate();
