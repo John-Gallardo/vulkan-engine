@@ -4,7 +4,11 @@
 class Window {
 public:
     void initWindow();
-    bool shouldClose();
+    bool shouldClose() const;
+    bool isKeyPressed(int key) const;
+    void closeWindow();
+    void pollEvents();
+    void cleanup();
 private:
     GLFWwindow *m_window{};
 };
