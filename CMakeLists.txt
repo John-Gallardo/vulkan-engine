@@ -1,13 +1,10 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.70)
 
 project(main)
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
-
-# find libraries
-find_package(glfw3 3.3 REQUIRED)
 
 set(SOURCE 
     src/main.cpp
@@ -29,6 +26,10 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     GLFW_INCLUDE_VULKAN
 )
 
-# link libraries
+# find & link libraries
+find_package(glfw3 3.3 REQUIRED)
+find_package(Vulkan REQUIRED)
 target_link_libraries(${PROJECT_NAME}
-    glfw)
+    glfw
+    Vulkan::Vulkan
+)
