@@ -4,6 +4,7 @@
 
 void App::run() {
     m_window.initWindow();
+    m_renderer.initVulkan(m_window);
     mainLoop();
 }
 

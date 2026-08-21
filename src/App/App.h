@@ -8,8 +8,9 @@ public:
     void run();
 
 private:
-    Window m_window{};
-    Input  m_input{};
+    Window   m_window{};
+    Input    m_input{};
+    Renderer m_renderer{};
 
     void mainLoop();
     void cleanup();
