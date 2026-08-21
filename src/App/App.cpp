@@ -1,13 +1,19 @@
 #include "App.h"
 #include "Window/Window.h"
+#include "Input/Input.h"
 
 void App::run() {
     m_window.initWindow();
-    renderLoop();
+    mainLoop();
 }
 
-void App::renderLoop() {
+void App::mainLoop() {
     while (!m_window.shouldClose()) {
-
+        m_window.pollEvents();
+        m_input.processUserInput(m_window);
     }
+}
+
+void App::cleanup() {
+    m_window.cleanup();
 }

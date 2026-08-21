@@ -6,8 +6,11 @@
 class App {
 public:
     void run();
-    void renderLoop();
 
 private:
     Window m_window{};
+    Input  m_input{};
+
+    void mainLoop();
+    void cleanup();
 };
