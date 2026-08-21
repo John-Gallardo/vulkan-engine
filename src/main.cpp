@@ -1,6 +1,7 @@
 #include "App/App.h"
-#include <print>
-#include <iostream>
+#include <iostream>   // for std::cerr
+#include <print>      // IWYU pragma: keep
+#include <exception>  // for exception
 
 int main() {
     try {

@@ -1,6 +1,6 @@
 #include "Window.h"
-#include "stdexcept"
 #include "Config.h"
+#include <stdexcept>
 #include <GLFW/glfw3.h>
 
 void Window::initWindow() {
