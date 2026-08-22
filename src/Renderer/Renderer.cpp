@@ -87,11 +87,58 @@ void Renderer::pickPhysicalDevice() {
 }
 
 void Renderer::createDevice() {
+    // enumerate queue families & find first queue family supporting graphics
+    uint32_t queueFamilyPropertyCount{};
+    vkGetPhysicalDeviceQueueFamilyProperties(m_physicalDevice, &queueFamilyPropertyCount, nullptr);
+    std::vector<VkQueueFamilyProperties> queueFamilyProperties(queueFamilyPropertyCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(m_physicalDevice, &queueFamilyPropertyCount, queueFamilyProperties.data());
 
+    uint32_t graphicsQueueFamilyIndex{};
+    for (auto [i, queueFamilyProperty] : std::views::enumerate(queueFamilyProperties)) {
+        if (queueFamilyProperty.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+            graphicsQueueFamilyIndex = i;
+            break;
+        }
+    }
+
+    float queuePriority{1.0f};  
+    VkDeviceQueueCreateInfo queueCreateInfo{
+        .sType            = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+        .pNext            = nullptr,
+        .flags            = {},
+        .queueFamilyIndex = graphicsQueueFamilyIndex,
+        .queueCount       = 1,
+        .pQueuePriorities = &queuePriority
+    };
+
+    // structure chain for our used extensions
+    VkPhysicalDeviceVulkan13Features vulkan13Features{
+        .sType            = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES,
+        .pNext            = nullptr,
+        .synchronization2 = VK_TRUE,
+        .dynamicRendering = VK_TRUE
+    };
+
+    VkDeviceCreateInfo deviceCreateInfo{
+        .sType                   = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+        .pNext                   = &vulkan13Features,
+        .queueCreateInfoCount    = 1,
+        .pQueueCreateInfos       = &queueCreateInfo,
+        .enabledExtensionCount   = static_cast<uint32_t>(m_requiredDeviceExtensions.size()),
+        .ppEnabledExtensionNames = m_requiredDeviceExtensions.data(),
+        .pEnabledFeatures        = nullptr
+    };
+
+    checkResult(vkCreateDevice(m_physicalDevice, &deviceCreateInfo, nullptr, &m_device), "Error: failed to create a Vulkan logical device");
+    vkGetDeviceQueue(m_device, graphicsQueueFamilyIndex, 0, &m_queue);
 }
 
 void Renderer::checkResult(VkResult result, std::string_view errorMessage) const {
     if (result != VK_SUCCESS) {
-        throw std::runtime_error(std::string(errorMessage));
+        throw std::runtime_error(std::string(errorMessage));  // std::string to have it null-terminated
     }
+}
+
+void Renderer::cleanup() {
+    // TODO: need to clean up literally everything
 }
