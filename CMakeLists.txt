@@ -8,7 +8,6 @@ endif()
 
 # packages & programs
 find_package(glfw3 3.3 REQUIRED)
-find_package(volk CONFIG REQUIRED)
 find_program(IWYU_PATH NAMES include-what-you-use iwyu)
 if (NOT IWYU_PATH)
     message(FATAL_ERROR "Could not find include-what-you-use")
@@ -22,12 +21,17 @@ set(SOURCE
     src/Renderer/Renderer.cpp
 )
 
-add_executable(${PROJECT_NAME} ${SOURCE})
+set(LIBS
+    libs/volk.c
+)
+
+add_executable(${PROJECT_NAME} ${SOURCE} ${LIBS})
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 
-# treat src as a root
+# treat src & lib as a root
 target_include_directories(${PROJECT_NAME} PRIVATE src)
+target_include_directories(${PROJECT_NAME} PRIVATE libs)
 
 # defines
 target_compile_definitions(${PROJECT_NAME} PRIVATE
@@ -37,7 +41,6 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 # link libraries
 target_link_libraries(${PROJECT_NAME}
     glfw
-    volk
 )
 
 # use programs
