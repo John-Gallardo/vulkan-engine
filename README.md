@@ -4,5 +4,4 @@
 - Vulkan 1.4
 - GLFW
 - CMake Version 3.70 or greater
-- Volk
 - Include-What-You-Use
